@@ -1,0 +1,1414 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consultoria Pro — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #060a12;
+        --bg2: #0c1220;
+        --surface: #0f1726;
+        --surface2: #141f30;
+        --border: rgba(255, 255, 255, 0.07);
+        --border2: rgba(255, 255, 255, 0.12);
+        --accent: #4f8ef7;
+        --accent-dim: rgba(79, 142, 247, 0.15);
+        --accent-glow: rgba(79, 142, 247, 0.3);
+        --text: #dde4f0;
+        --muted: #5a6a80;
+        --muted2: #8599b0;
+        --success: #4fc87a;
+        --warning: #f7b84f;
+        --danger: #f75f5f;
+        --purple: #9b6ff7;
+        --radius: 12px;
+        --sidebar-w: 240px;
+      }
+
+      html,
+      body {
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+      }
+
+      /* ── Layout ── */
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* ── Sidebar ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        background: var(--bg2);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+        transition: transform 0.3s;
+      }
+
+      .sidebar-logo {
+        padding: 1.25rem 1.25rem 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 0.5rem;
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--accent), #7c5ef7);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px var(--accent-glow);
+      }
+
+      .logo-name {
+        font-family: "Syne", sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: -0.02em;
+      }
+
+      .logo-name span {
+        color: var(--accent);
+      }
+
+      .nav {
+        flex: 1;
+        padding: 0.5rem;
+        overflow-y: auto;
+      }
+
+      .nav-section {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        padding: 0.75rem 0.75rem 0.35rem;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 0.6rem 0.75rem;
+        border-radius: 8px;
+        cursor: pointer;
+        color: var(--muted2);
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition:
+          background 0.15s,
+          color 0.15s;
+        margin-bottom: 2px;
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+      }
+      .nav-item.active {
+        background: var(--accent-dim);
+        color: var(--accent);
+      }
+      .nav-item .icon {
+        font-size: 15px;
+        flex-shrink: 0;
+      }
+
+      .sidebar-footer {
+        padding: 0.75rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .user-chip {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 0.6rem 0.75rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+
+      .user-chip:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .avatar {
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(135deg, var(--accent), var(--purple));
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: #fff;
+        flex-shrink: 0;
+      }
+
+      .user-info {
+        min-width: 0;
+      }
+      .user-name {
+        font-weight: 600;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .user-role {
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
+
+      .logout-btn {
+        margin-left: auto;
+        background: none;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 16px;
+        opacity: 0.7;
+        transition:
+          opacity 0.15s,
+          color 0.15s;
+      }
+      .logout-btn:hover {
+        opacity: 1;
+        color: var(--danger);
+      }
+
+      /* ── Main ── */
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(6, 10, 18, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 0.85rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .topbar-title {
+        font-family: "Syne", sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+      }
+
+      .topbar-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .btn-sm {
+        padding: 0.45rem 0.85rem;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: all 0.15s;
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--border2);
+        color: var(--muted2);
+      }
+      .btn-outline:hover {
+        color: var(--text);
+        border-color: var(--border2);
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+        box-shadow: 0 2px 10px var(--accent-glow);
+      }
+      .btn-primary:hover {
+        opacity: 0.88;
+      }
+
+      .content {
+        padding: 2rem;
+        flex: 1;
+      }
+
+      /* ── Greeting ── */
+      .greeting {
+        margin-bottom: 2rem;
+      }
+      .greeting h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin-bottom: 0.25rem;
+      }
+      .greeting p {
+        color: var(--muted2);
+        font-size: 0.875rem;
+        font-weight: 300;
+      }
+
+      /* ── Stats Row ── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.1rem;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .stat-card:hover {
+        border-color: var(--border2);
+        transform: translateY(-2px);
+      }
+
+      .stat-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+      }
+      .stat-value {
+        font-family: "Syne", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+      .stat-value.accent {
+        color: var(--accent);
+      }
+      .stat-value.success {
+        color: var(--success);
+      }
+      .stat-value.warning {
+        color: var(--warning);
+      }
+
+      /* ── Projects grid ── */
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+      .section-title {
+        font-family: "Syne", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.25rem;
+      }
+
+      .project-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+        animation: fadeUp 0.4s ease both;
+      }
+      .project-card:hover {
+        border-color: rgba(79, 142, 247, 0.35);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .project-card-header {
+        padding: 1.25rem 1.25rem 0.75rem;
+      }
+      .project-card-name {
+        font-family: "Syne", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+        letter-spacing: -0.02em;
+      }
+      .project-card-desc {
+        color: var(--muted2);
+        font-size: 0.8rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .project-card-body {
+        padding: 0.75rem 1.25rem 1.25rem;
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0.25rem 0.65rem;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 1rem;
+      }
+      .status-badge::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .s-planning {
+        background: rgba(90, 106, 128, 0.2);
+        color: #8599b0;
+      }
+      .s-design {
+        background: rgba(155, 111, 247, 0.15);
+        color: var(--purple);
+      }
+      .s-development {
+        background: rgba(79, 142, 247, 0.15);
+        color: var(--accent);
+      }
+      .s-review {
+        background: rgba(247, 184, 79, 0.15);
+        color: var(--warning);
+      }
+      .s-completed {
+        background: rgba(79, 200, 122, 0.15);
+        color: var(--success);
+      }
+      .s-paused {
+        background: rgba(247, 95, 95, 0.12);
+        color: var(--danger);
+      }
+
+      .progress-wrap {
+        margin-bottom: 0.75rem;
+      }
+      .progress-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.4rem;
+      }
+      .progress-label {
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+      .progress-pct {
+        font-family: "Syne", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .progress-bar-bg {
+        height: 5px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), var(--purple));
+        border-radius: 3px;
+        transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .task-mini-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      /* ── Project Detail Panel ── */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(4px);
+        z-index: 200;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .overlay.open {
+        display: block;
+        opacity: 1;
+      }
+
+      .panel {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        bottom: 0;
+        width: min(600px, 100vw);
+        background: var(--surface);
+        border-left: 1px solid var(--border);
+        z-index: 201;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .panel.open {
+        right: 0;
+      }
+
+      .panel-header {
+        position: sticky;
+        top: 0;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        z-index: 1;
+      }
+      .panel-close {
+        background: rgba(255, 255, 255, 0.06);
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        color: var(--muted2);
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.15s,
+          color 0.15s;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+      .panel-close:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: var(--text);
+      }
+
+      .panel-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+      .panel-desc {
+        color: var(--muted2);
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+      }
+
+      .panel-body {
+        padding: 1.5rem;
+        flex: 1;
+      }
+
+      .panel-section {
+        margin-bottom: 2rem;
+      }
+      .panel-section-title {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        margin-bottom: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .panel-section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* Progress large */
+      .progress-large {
+        background: var(--surface2);
+        border-radius: 10px;
+        padding: 1.25rem;
+      }
+      .progress-large .progress-bar-bg {
+        height: 8px;
+        margin-top: 0.75rem;
+      }
+      .progress-large .progress-meta {
+        margin-bottom: 0;
+      }
+      .pct-big {
+        font-family: "Syne", sans-serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--accent);
+        letter-spacing: -0.05em;
+      }
+
+      /* Tasks */
+      .task-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .task-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.7rem 0.85rem;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+      }
+      .task-item:hover {
+        border-color: var(--border2);
+      }
+      .task-item.done {
+        opacity: 0.55;
+      }
+
+      .task-check {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        border: 2px solid var(--border2);
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+        background: transparent;
+      }
+      .task-check.checked {
+        background: var(--success);
+        border-color: var(--success);
+      }
+      .task-check.checked::after {
+        content: "✓";
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .task-name {
+        flex: 1;
+        font-size: 0.875rem;
+      }
+      .task-item.done .task-name {
+        text-decoration: line-through;
+        color: var(--muted);
+      }
+
+      .task-date {
+        font-size: 0.72rem;
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+
+      /* Next steps */
+      .next-steps-box {
+        background: var(--surface2);
+        border: 1px solid rgba(79, 142, 247, 0.2);
+        border-radius: 10px;
+        padding: 1rem;
+        font-size: 0.875rem;
+        color: var(--muted2);
+        line-height: 1.6;
+      }
+
+      /* Files */
+      .file-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.65rem 0.85rem;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin-bottom: 6px;
+      }
+      .file-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .file-name {
+        flex: 1;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .file-size {
+        font-size: 0.72rem;
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+
+      /* Upload area */
+      .upload-area {
+        border: 2px dashed var(--border2);
+        border-radius: 10px;
+        padding: 1.25rem;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+      }
+      .upload-area:hover {
+        border-color: var(--accent);
+        background: var(--accent-dim);
+      }
+      .upload-area p {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-top: 0.3rem;
+      }
+      #file-input {
+        display: none;
+      }
+
+      /* Loading skeleton */
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          var(--surface) 25%,
+          var(--surface2) 50%,
+          var(--surface) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.4s infinite;
+        border-radius: 8px;
+      }
+      @keyframes shimmer {
+        from {
+          background-position: 200% 0;
+        }
+        to {
+          background-position: -200% 0;
+        }
+      }
+
+      /* Empty state */
+      .empty {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--muted);
+      }
+      .empty-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.4;
+      }
+      .empty p {
+        font-size: 0.875rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.mobile-open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+        }
+        .content {
+          padding: 1.25rem;
+        }
+        .topbar {
+          padding: 0.85rem 1.25rem;
+        }
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: var(--text);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        z-index: 999;
+        transform: translateY(60px);
+        opacity: 0;
+        transition:
+          transform 0.3s,
+          opacity 0.3s;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .toast.success {
+        border-color: rgba(79, 200, 122, 0.4);
+      }
+      .toast.error {
+        border-color: rgba(247, 95, 95, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <!-- ── Sidebar ── -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-icon">◈</div>
+          <div class="logo-name"><span>WASI</span> Consultoria</div>
+        </div>
+
+        <nav class="nav">
+          <div class="nav-section">Principal</div>
+          <div class="nav-item active" onclick="showView('projects')">
+            <span class="icon">▦</span> Projetos
+          </div>
+          <div class="nav-item" onclick="showView('activity')">
+            <span class="icon">◎</span> Atividade
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-chip" id="user-chip">
+            <div class="avatar" id="user-avatar">?</div>
+            <div class="user-info">
+              <div class="user-name" id="user-name-chip">Carregando…</div>
+              <div class="user-role" id="user-role-chip">cliente</div>
+            </div>
+            <button class="logout-btn" title="Sair" onclick="logout()">
+              Sair
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ── Main ── -->
+      <main class="main">
+        <div class="topbar">
+          <div class="topbar-title" id="topbar-title">Dashboard</div>
+          <div class="topbar-actions">
+            <button class="btn-sm btn-outline" onclick="loadProjects()">
+              ↺ Atualizar
+            </button>
+          </div>
+        </div>
+
+        <div class="content" id="main-content">
+          <!-- View: Projects -->
+          <div id="view-projects">
+            <div class="greeting">
+              <h2 id="greeting-text">Olá! 👋</h2>
+              <p id="greeting-sub">Aqui está o resumo dos seus projetos.</p>
+            </div>
+
+            <div class="stats-row" id="stats-row">
+              <div class="stat-card">
+                <div class="stat-label">Projetos</div>
+                <div class="stat-value accent" id="stat-total">–</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Em Andamento</div>
+                <div class="stat-value accent" id="stat-active">–</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Concluídos</div>
+                <div class="stat-value success" id="stat-done">–</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Tarefas Feitas</div>
+                <div class="stat-value warning" id="stat-tasks">–</div>
+              </div>
+            </div>
+
+            <div class="section-header">
+              <div class="section-title">Seus Projetos</div>
+            </div>
+            <div class="projects-grid" id="projects-grid">
+              <!-- skeleton -->
+              <div
+                class="skeleton"
+                style="height: 200px; border-radius: 16px"
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 200px; border-radius: 16px"
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 200px; border-radius: 16px"
+              ></div>
+            </div>
+          </div>
+
+          <!-- View: Activity -->
+          <div id="view-activity" style="display: none">
+            <div class="greeting">
+              <h2>Atividade Recente</h2>
+              <p>Histórico das últimas ações nos seus projetos.</p>
+            </div>
+            <div id="activity-list">
+              <p style="color: var(--muted)">Carregando…</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ── Overlay + Project Panel ── -->
+    <div class="overlay" id="overlay" onclick="closePanel()"></div>
+
+    <div class="panel" id="project-panel">
+      <div class="panel-header">
+        <div style="flex: 1; min-width: 0">
+          <div class="panel-title" id="panel-title">Projeto</div>
+          <div class="panel-desc" id="panel-desc"></div>
+        </div>
+        <button class="panel-close" onclick="closePanel()">✕</button>
+      </div>
+      <div class="panel-body" id="panel-body">
+        <!-- preenchido por JS -->
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      // ════════════════════════════════════════════════════
+      // ESTADO & BOOT
+      // ════════════════════════════════════════════════════
+      let currentUser = null;
+      let currentProject = null;
+
+      const token = localStorage.getItem("cp_token");
+      if (!token) {
+        window.location.href = "/login.html";
+      }
+
+      async function boot() {
+        try {
+          const res = await apiFetch("/api/auth/me");
+          currentUser = res.user;
+          renderUserChip();
+          renderGreeting();
+          await loadProjects();
+        } catch {
+          logout();
+        }
+      }
+
+      // ════════════════════════════════════════════════════
+      // API HELPER
+      // ════════════════════════════════════════════════════
+      async function apiFetch(url, opts = {}) {
+        const res = await fetch(url, {
+          ...opts,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            ...(opts.headers || {}),
+          },
+        });
+        if (res.status === 401) {
+          logout();
+          return;
+        }
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Erro na requisição");
+        return data;
+      }
+
+      // ════════════════════════════════════════════════════
+      // UI HELPERS
+      // ════════════════════════════════════════════════════
+      function showToast(msg, type = "success") {
+        const t = document.getElementById("toast");
+        const icons = { success: "✓", error: "⚠" };
+        t.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+        t.className = `toast show ${type}`;
+        setTimeout(() => (t.className = "toast"), 3000);
+      }
+
+      function showView(v) {
+        ["projects", "activity"].forEach((id) => {
+          document.getElementById(`view-${id}`).style.display =
+            id === v ? "" : "none";
+        });
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((el) => el.classList.remove("active"));
+        event?.currentTarget?.classList.add("active");
+        document.getElementById("topbar-title").textContent =
+          v === "projects" ? "Dashboard" : "Atividade";
+        if (v === "activity") loadActivity();
+      }
+
+      function renderUserChip() {
+        if (!currentUser) return;
+        const initials = currentUser.name
+          .split(" ")
+          .slice(0, 2)
+          .map((w) => w[0])
+          .join("")
+          .toUpperCase();
+        document.getElementById("user-avatar").textContent = initials;
+        document.getElementById("user-name-chip").textContent =
+          currentUser.name;
+        document.getElementById("user-role-chip").textContent =
+          currentUser.company || currentUser.role;
+      }
+
+      function renderGreeting() {
+        const hour = new Date().getHours();
+        const greet =
+          hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
+        const first = currentUser.name.split(" ")[0];
+        document.getElementById("greeting-text").textContent =
+          `${greet}, ${first}! 👋`;
+        document.getElementById("greeting-sub").textContent =
+          `${new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}`;
+      }
+
+      function logout() {
+        localStorage.removeItem("cp_token");
+        localStorage.removeItem("cp_user");
+        window.location.href = "/login.html";
+      }
+
+      // ════════════════════════════════════════════════════
+      // PROJETOS
+      // ════════════════════════════════════════════════════
+      const STATUS_LABEL = {
+        planning: "Planejamento",
+        design: "Design",
+        development: "Desenvolvimento",
+        review: "Revisão",
+        completed: "Concluído",
+        paused: "Pausado",
+      };
+
+      async function loadProjects() {
+        const grid = document.getElementById("projects-grid");
+        grid.innerHTML = `
+    <div class="skeleton" style="height:200px;border-radius:16px"></div>
+    <div class="skeleton" style="height:200px;border-radius:16px"></div>
+  `;
+
+        try {
+          const data = await apiFetch("/api/projects");
+          const projects = data.projects;
+
+          // Stats
+          document.getElementById("stat-total").textContent = projects.length;
+          document.getElementById("stat-active").textContent = projects.filter(
+            (p) => !["completed", "paused"].includes(p.status),
+          ).length;
+          document.getElementById("stat-done").textContent = projects.filter(
+            (p) => p.status === "completed",
+          ).length;
+          const totalTasks = projects.reduce(
+            (a, p) => a + (p.completed_tasks || 0),
+            0,
+          );
+          document.getElementById("stat-tasks").textContent = totalTasks;
+
+          if (projects.length === 0) {
+            grid.innerHTML = `
+        <div class="empty" style="grid-column:1/-1">
+          <div class="empty-icon">📋</div>
+          <p>Nenhum projeto encontrado.</p>
+          <p style="margin-top:0.5rem;font-size:0.8rem">Seu consultor irá adicionar seus projetos em breve.</p>
+        </div>`;
+            return;
+          }
+
+          grid.innerHTML = "";
+          projects.forEach((p, i) => {
+            const card = document.createElement("div");
+            card.className = "project-card";
+            card.style.animationDelay = `${i * 0.07}s`;
+            card.innerHTML = buildProjectCard(p);
+            card.addEventListener("click", () => openProject(p.id));
+            grid.appendChild(card);
+          });
+        } catch (err) {
+          grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">⚠</div><p>${err.message}</p></div>`;
+        }
+      }
+
+      function buildProjectCard(p) {
+        const pct = p.progress || 0;
+        const total = p.total_tasks || 0;
+        const done = p.completed_tasks || 0;
+        const sc = `s-${p.status}`;
+
+        return `
+    <div class="project-card-header">
+      <div class="project-card-name">${esc(p.name)}</div>
+      ${p.description ? `<div class="project-card-desc">${esc(p.description)}</div>` : ""}
+    </div>
+    <div class="project-card-body">
+      <span class="status-badge ${sc}">${STATUS_LABEL[p.status] || p.status}</span>
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span class="progress-label">Progresso geral</span>
+          <span class="progress-pct">${pct}%</span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="task-mini-row">
+        <span>${done} de ${total} tarefas concluídas</span>
+        <span>→</span>
+      </div>
+    </div>`;
+      }
+
+      // ════════════════════════════════════════════════════
+      // PAINEL DE PROJETO
+      // ════════════════════════════════════════════════════
+      async function openProject(id) {
+        document.getElementById("overlay").classList.add("open");
+        document.getElementById("project-panel").classList.add("open");
+        document.getElementById("panel-body").innerHTML =
+          `<div class="skeleton" style="height:300px;border-radius:10px"></div>`;
+        document.getElementById("panel-title").textContent = "…";
+        document.getElementById("panel-desc").textContent = "";
+
+        try {
+          const data = await apiFetch(`/api/projects/${id}`);
+          currentProject = data.project;
+          renderPanel(data.project);
+        } catch (err) {
+          document.getElementById("panel-body").innerHTML =
+            `<div class="empty"><div class="empty-icon">⚠</div><p>${err.message}</p></div>`;
+        }
+      }
+
+      function renderPanel(p) {
+        document.getElementById("panel-title").textContent = p.name;
+        document.getElementById("panel-desc").textContent = p.description || "";
+
+        const pct = p.progress || 0;
+        const sc = `s-${p.status}`;
+
+        const tasksHTML =
+          (p.tasks || []).length === 0
+            ? '<p style="color:var(--muted);font-size:0.85rem">Nenhuma tarefa ainda.</p>'
+            : `<div class="task-list">${(p.tasks || [])
+                .map(
+                  (t) => `
+        <div class="task-item ${t.is_completed ? "done" : ""}" id="task-${t.id}">
+          <div class="task-check ${t.is_completed ? "checked" : ""}" onclick="toggleTask(${p.id}, ${t.id})"></div>
+          <span class="task-name">${esc(t.name)}</span>
+          <span class="task-date">${t.is_completed ? fmtDate(t.completed_at) : ""}</span>
+        </div>`,
+                )
+                .join("")}</div>`;
+
+        const filesHTML =
+          (p.files || []).length === 0
+            ? '<p style="color:var(--muted);font-size:0.85rem">Nenhum arquivo enviado.</p>'
+            : (p.files || [])
+                .map(
+                  (f) => `
+        <div class="file-item">
+          <span class="file-icon">${fileIcon(f.mime_type)}</span>
+          <span class="file-name">${esc(f.original_name)}</span>
+          <span class="file-size">${fmtSize(f.file_size)}</span>
+          <a href="/uploads/${f.filename}" target="_blank" style="color:var(--accent);font-size:0.75rem;text-decoration:none">↓</a>
+        </div>`,
+                )
+                .join("");
+
+        document.getElementById("panel-body").innerHTML = `
+
+    <!-- Status + Progress -->
+    <div class="panel-section">
+      <div class="panel-section-title">Status do Projeto</div>
+      <div class="progress-large">
+        <div class="progress-meta">
+          <span class="pct-big">${pct}%</span>
+          <span class="status-badge ${sc}">${STATUS_LABEL[p.status] || p.status}</span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>
+
+    <!-- Tarefas -->
+    <div class="panel-section">
+      <div class="panel-section-title">Tarefas (${(p.tasks || []).filter((t) => t.is_completed).length}/${(p.tasks || []).length})</div>
+      ${tasksHTML}
+    </div>
+
+    <!-- Próximos Passos -->
+    ${
+      p.next_steps
+        ? `
+    <div class="panel-section">
+      <div class="panel-section-title">Próximos Passos</div>
+      <div class="next-steps-box">${esc(p.next_steps).replace(/\n/g, "<br>")}</div>
+    </div>`
+        : ""
+    }
+
+    <!-- Arquivos -->
+    <div class="panel-section">
+      <div class="panel-section-title">Arquivos</div>
+      ${filesHTML}
+      <div class="upload-area" onclick="document.getElementById('file-input').click()">
+        <div>📎 Clique para enviar um arquivo</div>
+        <p>PDF, Word, Excel, Imagens, ZIP — máx. 10MB</p>
+      </div>
+      <input type="file" id="file-input" onchange="uploadFile(${p.id})" />
+    </div>
+  `;
+      }
+
+      function closePanel() {
+        document.getElementById("overlay").classList.remove("open");
+        document.getElementById("project-panel").classList.remove("open");
+        currentProject = null;
+      }
+
+      // ════════════════════════════════════════════════════
+      // TOGGLE TASK
+      // ════════════════════════════════════════════════════
+      async function toggleTask(projectId, taskId) {
+        const el = document.getElementById(`task-${taskId}`);
+        const checkEl = el?.querySelector(".task-check");
+
+        // Otimismo: atualizar UI imediatamente
+        const wasChecked = checkEl.classList.contains("checked");
+        checkEl.classList.toggle("checked", !wasChecked);
+        el.classList.toggle("done", !wasChecked);
+
+        try {
+          const data = await apiFetch(
+            `/api/projects/${projectId}/tasks/${taskId}/toggle`,
+            { method: "PATCH" },
+          );
+          const task = data.task;
+
+          // Sincronizar estado real
+          checkEl.classList.toggle("checked", task.is_completed);
+          el.classList.toggle("done", task.is_completed);
+
+          // Atualizar data se concluído
+          const dateEl = el.querySelector(".task-date");
+          if (dateEl)
+            dateEl.textContent = task.is_completed
+              ? fmtDate(task.completed_at)
+              : "";
+
+          showToast(
+            task.is_completed ? "✓ Tarefa concluída!" : "Tarefa reaberta",
+            "success",
+          );
+
+          // Atualizar barra de progresso no painel
+          await refreshPanelProgress(projectId);
+
+          // Atualizar card na grid (progresso)
+          await loadProjects();
+        } catch (err) {
+          // Reverter
+          checkEl.classList.toggle("checked", wasChecked);
+          el.classList.toggle("done", wasChecked);
+          showToast(err.message, "error");
+        }
+      }
+
+      async function refreshPanelProgress(projectId) {
+        try {
+          const data = await apiFetch(`/api/projects/${projectId}`);
+          const pct = data.project.progress || 0;
+          const fill = document.querySelector(".progress-bar-fill");
+          const pctEl = document.querySelector(".pct-big");
+          if (fill) fill.style.width = `${pct}%`;
+          if (pctEl) pctEl.textContent = `${pct}%`;
+        } catch {}
+      }
+
+      // ════════════════════════════════════════════════════
+      // UPLOAD
+      // ════════════════════════════════════════════════════
+      async function uploadFile(projectId) {
+        const input = document.getElementById("file-input");
+        const file = input.files[0];
+        if (!file) return;
+
+        showToast("Enviando arquivo…", "success");
+
+        const form = new FormData();
+        form.append("file", file);
+
+        try {
+          const res = await fetch(`/api/projects/${projectId}/upload`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: form,
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error);
+
+          showToast(`Arquivo "${file.name}" enviado!`, "success");
+          openProject(projectId); // recarregar painel
+        } catch (err) {
+          showToast(err.message, "error");
+        } finally {
+          input.value = "";
+        }
+      }
+
+      // ════════════════════════════════════════════════════
+      // ATIVIDADE
+      // ════════════════════════════════════════════════════
+      async function loadActivity() {
+        const el = document.getElementById("activity-list");
+        el.innerHTML = '<p style="color:var(--muted)">Carregando…</p>';
+
+        // Nota: rota de logs é apenas admin; exibir mensagem amigável para clientes
+        el.innerHTML = `
+    <div style="color:var(--muted2);font-size:0.875rem;line-height:1.8">
+      <p>As atividades são registradas automaticamente sempre que você:</p>
+      <ul style="margin-top:0.5rem;padding-left:1.25rem">
+        <li>Realiza login no painel</li>
+        <li>Marca uma tarefa como concluída</li>
+        <li>Envia um arquivo para um projeto</li>
+      </ul>
+      <p style="margin-top:0.75rem;color:var(--muted)">O histórico completo é visível para o seu consultor.</p>
+    </div>`;
+      }
+
+      // ════════════════════════════════════════════════════
+      // UTILS
+      // ════════════════════════════════════════════════════
+      function esc(str) {
+        if (!str) return "";
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function fmtDate(dt) {
+        if (!dt) return "";
+        return new Date(dt).toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "short",
+        });
+      }
+
+      function fmtSize(bytes) {
+        if (bytes < 1024) return `${bytes} B`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+      }
+
+      function fileIcon(mime) {
+        if (!mime) return "📄";
+        if (mime.includes("pdf")) return "📕";
+        if (mime.includes("word")) return "📘";
+        if (mime.includes("sheet") || mime.includes("excel")) return "📗";
+        if (mime.includes("image")) return "🖼";
+        if (mime.includes("zip")) return "🗜";
+        return "📄";
+      }
+
+      // ── Boot ──
+      boot();
+    </script>
+  </body>
+</html>

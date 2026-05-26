@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consultoria Pro — Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #080c14;
+        --surface: #0e1520;
+        --border: rgba(255, 255, 255, 0.07);
+        --accent: #4f8ef7;
+        --accent-glow: rgba(79, 142, 247, 0.35);
+        --text: #e8edf5;
+        --muted: #637085;
+        --danger: #f75f5f;
+        --success: #4fc87a;
+        --radius: 14px;
+      }
+
+      html,
+      body {
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Poppins", sans-serif;
+        font-size: 15px;
+      }
+
+      /* Animated background grid */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(79, 142, 247, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(79, 142, 247, 0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Orb glow */
+      body::after {
+        content: "";
+        position: fixed;
+        top: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(
+          circle,
+          rgba(79, 142, 247, 0.12) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .page {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow:
+          0 0 0 1px rgba(79, 142, 247, 0.08),
+          0 24px 60px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 2rem;
+      }
+
+      .logo-icon {
+        width: 38px;
+        height: 38px;
+        background: linear-gradient(135deg, var(--accent), #7c5ef7);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        box-shadow: 0 4px 16px var(--accent-glow);
+      }
+
+      .logo-text {
+        font-family: "Syne", sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--text);
+        letter-spacing: -0.02em;
+      }
+
+      .logo-text span {
+        color: var(--accent);
+      }
+
+      h1 {
+        font-family: "Syne", sans-serif;
+        font-size: 1.65rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: var(--text);
+        margin-bottom: 0.35rem;
+      }
+
+      .subtitle {
+        color: var(--muted);
+        font-size: 0.875rem;
+        margin-bottom: 2rem;
+        font-weight: 300;
+      }
+
+      .field {
+        margin-bottom: 1.1rem;
+      }
+
+      label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--muted);
+        margin-bottom: 0.45rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.95rem;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          background 0.2s;
+      }
+
+      input:focus {
+        border-color: var(--accent);
+        background: rgba(79, 142, 247, 0.05);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+      }
+
+      input::placeholder {
+        color: var(--muted);
+        opacity: 0.6;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 0.9rem;
+        background: linear-gradient(135deg, var(--accent), #6b7af7);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-family: "Syne", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        margin-top: 0.5rem;
+        transition:
+          opacity 0.2s,
+          transform 0.15s,
+          box-shadow 0.2s;
+        box-shadow: 0 4px 20px var(--accent-glow);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn:hover:not(:disabled) {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 28px var(--accent-glow);
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+      .btn.loading .spinner {
+        display: block;
+      }
+      .btn.loading .btn-text {
+        display: none;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .alert {
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        margin-top: 1rem;
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+      .alert.show {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .alert.error {
+        background: rgba(247, 95, 95, 0.1);
+        border: 1px solid rgba(247, 95, 95, 0.25);
+        color: var(--danger);
+      }
+      .alert.success {
+        background: rgba(79, 200, 122, 0.1);
+        border: 1px solid rgba(79, 200, 122, 0.25);
+        color: var(--success);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .footer-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      .divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 1.5rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="card">
+        <div class="logo-wrap">
+          <div class="logo-icon">◈</div>
+          <div class="logo-text"><span>WASI</span> Consultoria</div>
+        </div>
+
+        <h1>Bem-vindo</h1>
+        <p class="subtitle">Acesse seu painel de projetos</p>
+
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="seu@email.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="field">
+          <label for="password">Senha</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button class="btn" id="btn-login" onclick="handleLogin()">
+          <span class="btn-text">Entrar →</span>
+          <span class="spinner"></span>
+        </button>
+
+        <div class="alert error" id="alert-error">
+          ⚠ <span id="error-msg"></span>
+        </div>
+        <div class="alert success" id="alert-success">
+          ✓ <span>Login realizado! Redirecionando…</span>
+        </div>
+
+        <hr class="divider" />
+        <div class="footer-link">Problemas? Fale com seu consultor.</div>
+      </div>
+    </div>
+
+    <script>
+      // Redirecionar se já logado
+      if (localStorage.getItem("cp_token")) {
+        window.location.href = "/dashboard.html";
+      }
+
+      const emailEl = document.getElementById("email");
+      const passEl = document.getElementById("password");
+
+      // Enter para logar
+      [emailEl, passEl].forEach((el) => {
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") handleLogin();
+        });
+      });
+
+      async function handleLogin() {
+        const btn = document.getElementById("btn-login");
+        const errEl = document.getElementById("alert-error");
+        const okEl = document.getElementById("alert-success");
+        const msgEl = document.getElementById("error-msg");
+
+        errEl.classList.remove("show");
+        okEl.classList.remove("show");
+
+        const email = emailEl.value.trim();
+        const password = passEl.value;
+
+        if (!email || !password) {
+          msgEl.textContent = "Preencha e-mail e senha.";
+          errEl.classList.add("show");
+          return;
+        }
+
+        btn.classList.add("loading");
+        btn.disabled = true;
+
+        try {
+          const res = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+            msgEl.textContent = data.error || "Erro ao fazer login.";
+            errEl.classList.add("show");
+            return;
+          }
+
+          localStorage.setItem("cp_token", data.token);
+          localStorage.setItem("cp_user", JSON.stringify(data.user));
+          okEl.classList.add("show");
+
+          setTimeout(() => {
+            window.location.href = "/dashboard.html";
+          }, 800);
+        } catch (err) {
+          msgEl.textContent = "Não foi possível conectar ao servidor.";
+          errEl.classList.add("show");
+        } finally {
+          btn.classList.remove("loading");
+          btn.disabled = false;
+        }
+      }
+    </script>
+  </body>
+</html>
