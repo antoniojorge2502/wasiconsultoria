@@ -9,6 +9,7 @@ async function reset() {
     [hash],
   );
   console.log("Senha do admin redefinida para: Admin@123");
+  console.log(hash);
   await pool.end();
 }
 
