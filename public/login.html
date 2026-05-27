@@ -395,11 +395,11 @@
           });
           const data = await res.json();
 
-          // if (!res.ok) {
-          //   msgEl.textContent = data.error || "Erro ao fazer login.";
-          //   errEl.classList.add("show");
-          //   return;
-          // }
+          if (!res.ok) {
+            msgEl.textContent = data.error || "Erro ao fazer login.";
+            errEl.classList.add("show");
+            return;
+          }
 
           localStorage.setItem("cp_token", data.token);
           localStorage.setItem("cp_user", JSON.stringify(data.user));
